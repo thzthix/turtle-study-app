@@ -8,4 +8,5 @@ export type FriendTurtle = {
   distanceLabel: string;
   moodMessage: string;
   accent: string;
+  supportCount: number;
 };
