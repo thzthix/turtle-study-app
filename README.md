@@ -29,6 +29,8 @@
 
 - `docs/mvp-spec.md`: MVP 범위와 제품 명세
 - `docs/ux-flow.md`: 화면 흐름과 주요 상태
+- `docs/implementation-journal.md`: 구현 일기
+- `docs/implementation-journal-template.md`: 구현 일기 템플릿
 - `AGENTS.md`: 작업 규칙과 구현 원칙
 
 ## 제품 한 줄
