@@ -70,6 +70,17 @@ button {
   align-items: stretch;
 }
 
+.focus-layout {
+  display: grid;
+  gap: 18px;
+}
+
+.focus-support {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
 .secondary-layout {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -92,6 +103,11 @@ button {
 
 .scene-card {
   padding: 26px;
+}
+
+.scene-card-focus {
+  padding: 16px;
+  background: rgba(255, 252, 246, 0.66);
 }
 
 .eyebrow {
@@ -120,12 +136,50 @@ h3 {
   display: flex;
   flex-direction: column;
   gap: 24px;
+  justify-content: center;
 }
 
 .panel-copy h1 {
   margin-bottom: 12px;
   font-size: clamp(2rem, 3vw, 3rem);
   line-height: 1.04;
+}
+
+.focus-hud {
+  display: grid;
+  grid-template-columns: 140px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  padding: 18px 22px;
+  border: 1px solid rgba(116, 130, 109, 0.12);
+  border-radius: 28px;
+  background: rgba(255, 252, 246, 0.84);
+  box-shadow: 0 16px 40px rgba(117, 121, 92, 0.09);
+  backdrop-filter: blur(10px);
+}
+
+.focus-hud-label {
+  margin-bottom: 6px;
+  color: #6e7a66;
+  font-size: 0.86rem;
+}
+
+.focus-hud-time {
+  display: block;
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.focus-hud-message {
+  margin-bottom: 0;
+  color: #55635a;
+  font-size: 1rem;
+}
+
+.focus-hud-actions {
+  display: flex;
+  gap: 10px;
 }
 
 .status-pill {
@@ -272,6 +326,11 @@ h3 {
     linear-gradient(180deg, #f4f2d6 0%, #d9ebd8 38%, #b8d8aa 100%);
 }
 
+.scene-focus {
+  min-height: 620px;
+  margin-top: 0;
+}
+
 .scene-glow {
   position: absolute;
   inset: 0;
@@ -406,7 +465,7 @@ h3 {
   position: absolute;
   bottom: 70px;
   left: 10%;
-  width: min(330px, 62vw);
+  width: min(292px, 54vw);
   transform-origin: center bottom;
   transition: transform 900ms ease;
 }
@@ -989,18 +1048,28 @@ h3 {
 @media (max-width: 980px) {
   .hero-layout,
   .secondary-layout,
+  .focus-support,
   .friend-grid,
   .summary-metrics {
     grid-template-columns: 1fr;
+  }
+
+  .focus-hud {
+    grid-template-columns: 1fr;
+    align-items: flex-start;
   }
 
   .scene {
     min-height: 360px;
   }
 
+  .scene-focus {
+    min-height: 520px;
+  }
+
   .turtle {
     left: 6%;
-    width: min(280px, 72vw);
+    width: min(248px, 66vw);
   }
 
   .board-header,
@@ -1026,7 +1095,8 @@ h3 {
 
   .panel-actions,
   .preset-list,
-  .completion-badges {
+  .completion-badges,
+  .focus-hud-actions {
     flex-direction: column;
   }
 
@@ -1038,6 +1108,10 @@ h3 {
 
   .scene {
     min-height: 320px;
+  }
+
+  .scene-focus {
+    min-height: 460px;
   }
 
   .speech-bubble {
@@ -1063,6 +1137,6 @@ h3 {
   .turtle {
     left: 4%;
     bottom: 76px;
-    width: min(240px, 76vw);
+    width: min(210px, 68vw);
   }
 }

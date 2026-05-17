@@ -3,9 +3,10 @@ import type { SessionStatus } from '../types';
 type TurtleSceneProps = {
   progressRatio: number;
   status: SessionStatus;
+  mode: 'preview' | 'focus';
 };
 
-export function TurtleScene({ progressRatio, status }: TurtleSceneProps) {
+export function TurtleScene({ progressRatio, status, mode }: TurtleSceneProps) {
   const turtleStyle = {
     transform: `translateX(${progressRatio * 100}%)`,
   };
@@ -15,15 +16,21 @@ export function TurtleScene({ progressRatio, status }: TurtleSceneProps) {
   const mouthPath = getMouthPath(status);
   const cheekOpacity = status === 'cheerful' || status === 'completed' ? 1 : 0.45;
   const moodIcon = getMoodIcon(status);
+  const shouldShowHeader = mode === 'preview';
+  const shouldShowBubble =
+    mode === 'preview' || status === 'care-needed' || status === 'paused' || status === 'completed';
+  const shouldShowMoodToken = mode === 'preview';
 
   return (
-    <section className="scene-card">
-      <div className="scene-header">
-        <p className="eyebrow">Turtle Companion</p>
-        <h2>오늘의 산책길</h2>
-      </div>
+    <section className={mode === 'focus' ? 'scene-card scene-card-focus' : 'scene-card'}>
+      {shouldShowHeader ? (
+        <div className="scene-header">
+          <p className="eyebrow">Turtle Companion</p>
+          <h2>오늘의 산책길</h2>
+        </div>
+      ) : null}
 
-      <div className="scene">
+      <div className={mode === 'focus' ? 'scene scene-focus' : 'scene'}>
         <div className="scene-glow" />
         <div className="sun" />
         <div className="sparkle sparkle-left" />
@@ -34,13 +41,15 @@ export function TurtleScene({ progressRatio, status }: TurtleSceneProps) {
           <div className="path-progress" style={{ width: `${Math.max(12, progressRatio * 100)}%` }} />
         </div>
 
-        <div className={`speech-bubble speech-bubble-${status}`}>{bubbleMessage}</div>
-        <div className={`mood-token mood-token-${status}`}>
-          <span className="mood-token-icon" aria-hidden="true">
-            {moodIcon}
-          </span>
-          <span>{getMoodLabel(status)}</span>
-        </div>
+        {shouldShowBubble ? <div className={`speech-bubble speech-bubble-${status}`}>{bubbleMessage}</div> : null}
+        {shouldShowMoodToken ? (
+          <div className={`mood-token mood-token-${status}`}>
+            <span className="mood-token-icon" aria-hidden="true">
+              {moodIcon}
+            </span>
+            <span>{getMoodLabel(status)}</span>
+          </div>
+        ) : null}
         {status === 'completed' ? (
           <div className="completion-burst" aria-hidden="true">
             <span className="burst-dot burst-dot-a" />
@@ -87,9 +96,9 @@ export function TurtleScene({ progressRatio, status }: TurtleSceneProps) {
               <path d="M170 109 207 127 195 157 165 148Z" fill="#67885f" />
             </g>
             <g className="head-group">
-              <ellipse cx="252" cy="90" rx="54" ry="64" fill="#d7dda1" />
-              <ellipse cx="248" cy="104" rx="10" ry="6" fill="#f6d0ba" opacity={cheekOpacity} />
-              <ellipse cx="282" cy="104" rx="10" ry="6" fill="#f6d0ba" opacity={cheekOpacity} />
+              <ellipse cx="246" cy="96" rx="38" ry="46" fill="#d7dda1" />
+              <ellipse cx="241" cy="105" rx="8" ry="5" fill="#f6d0ba" opacity={cheekOpacity} />
+              <ellipse cx="265" cy="105" rx="8" ry="5" fill="#f6d0ba" opacity={cheekOpacity} />
               <path d={eyePath.left} fill="none" stroke="#3f2317" strokeWidth="5.5" strokeLinecap="round" />
               <path d={eyePath.right} fill="none" stroke="#3f2317" strokeWidth="5.5" strokeLinecap="round" />
               <path d={mouthPath} fill="none" stroke="#4d3225" strokeWidth="4.5" strokeLinecap="round" />
@@ -162,24 +171,24 @@ function getEyePath(status: SessionStatus) {
   switch (status) {
     case 'care-needed':
       return {
-        left: 'M254 84q7 5 14 0',
-        right: 'M276 84q7 5 14 0',
+        left: 'M241 90q5 4 10 0',
+        right: 'M257 90q5 4 10 0',
       };
     case 'cheerful':
     case 'completed':
       return {
-        left: 'M252 82q8 10 16 0',
-        right: 'M274 82q8 10 16 0',
+        left: 'M239 88q6 7 12 0',
+        right: 'M255 88q6 7 12 0',
       };
     case 'paused':
       return {
-        left: 'M252 84q8 -5 16 0',
-        right: 'M274 84q8 -5 16 0',
+        left: 'M239 91q6 -4 12 0',
+        right: 'M255 91q6 -4 12 0',
       };
     default:
       return {
-        left: 'M260 82v1',
-        right: 'M284 82v1',
+        left: 'M246 89v1',
+        right: 'M262 89v1',
       };
   }
 }
@@ -187,13 +196,13 @@ function getEyePath(status: SessionStatus) {
 function getMouthPath(status: SessionStatus) {
   switch (status) {
     case 'care-needed':
-      return 'M268 98q8 5 16 0';
+      return 'M244 104q6 4 12 0';
     case 'cheerful':
     case 'completed':
-      return 'M266 96q10 10 20 0';
+      return 'M242 103q8 7 16 0';
     case 'paused':
-      return 'M269 99q7 -2 14 0';
+      return 'M245 106q5 -2 10 0';
     default:
-      return 'M270 98q6 3 12 0';
+      return 'M246 104q4 3 8 0';
   }
 }
