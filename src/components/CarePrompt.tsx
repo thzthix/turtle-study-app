@@ -20,7 +20,7 @@ export function CarePrompt({ activeCareOption, status, onSoothe }: CarePromptPro
   const buttonLabel = activeCareOption === 'water' ? '물 주기' : '당근 주기';
 
   return (
-    <section className="care-card card">
+    <section className="care-card">
       <p className="eyebrow">Care Check</p>
       <h2>{title}</h2>
       <p>{description}</p>

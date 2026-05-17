@@ -2,6 +2,7 @@ import type { SessionStatus } from '../types';
 
 type FocusHudProps = {
   secondsLeft: number;
+  progressRatio: number;
   status: SessionStatus;
   encouragementMessage: string;
   onResumeSession: () => void;
@@ -10,6 +11,7 @@ type FocusHudProps = {
 
 export function FocusHud({
   secondsLeft,
+  progressRatio,
   status,
   encouragementMessage,
   onResumeSession,
@@ -17,11 +19,16 @@ export function FocusHud({
 }: FocusHudProps) {
   return (
     <section className="focus-hud">
-      <div>
+      <div className="focus-hud-time-block">
         <p className="focus-hud-label">남은 시간</p>
         <strong className="focus-hud-time">{formatTime(secondsLeft)}</strong>
       </div>
-      <p className="focus-hud-message">{encouragementMessage}</p>
+      <div className="focus-hud-center">
+        <div className="focus-hud-progress" aria-hidden="true">
+          <span style={{ width: `${Math.max(6, progressRatio * 100)}%` }} />
+        </div>
+        <p className="focus-hud-message">{encouragementMessage}</p>
+      </div>
       <div className="focus-hud-actions">
         {status === 'paused' ? (
           <button type="button" className="primary-button" onClick={onResumeSession}>
