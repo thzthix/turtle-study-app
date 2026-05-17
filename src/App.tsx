@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { CarePrompt } from './components/CarePrompt';
 import { CompletionCard } from './components/CompletionCard';
+import { FocusHud } from './components/FocusHud';
 import { FriendBoard } from './components/FriendBoard';
 import { HistoryPanel } from './components/HistoryPanel';
 import { JourneySummary } from './components/JourneySummary';
@@ -32,6 +33,7 @@ export default function App() {
   } = useFocusSession();
   const { todaySessions, todayMinutes, recentEntries, addCompletedSession } = useSessionHistory();
   const handledCompletedSignalRef = useRef(0);
+  const isFocusMode = status !== 'idle' && status !== 'completed';
 
   useEffect(() => {
     if (completedSignal === 0 || completedSignal === handledCompletedSignalRef.current) {
@@ -64,39 +66,64 @@ export default function App() {
       <div className="background-orb orb-left" />
       <div className="background-orb orb-right" />
 
-      <section className="hero-layout">
-        <SessionPanel
-          selectedMinutes={selectedMinutes}
-          secondsLeft={secondsLeft}
-          status={status}
-          encouragementMessage={encouragementMessage}
-          onSelectMinutes={selectMinutes}
-          onStartSession={startSession}
-          onResumeSession={resumeSession}
-          onResetSession={resetSession}
-        />
-        <TurtleScene progressRatio={progressRatio} status={status} />
-      </section>
-
-      <section className="secondary-layout">
-        <JourneySummary progressRatio={progressRatio} selectedMinutes={selectedMinutes} />
-        <HistoryPanel
-          todaySessions={todaySessions}
-          todayMinutes={todayMinutes}
-          recentEntries={recentEntries}
-        />
-        <CarePrompt activeCareOption={activeCareOption} status={status} onSoothe={sootheTurtle} />
-        {status === 'paused' ? <PauseNotice onResumeSession={resumeSession} /> : null}
-        {status === 'completed' ? (
-          <CompletionCard
-            completedSessions={completedSessions}
-            completedMinutes={completedMinutes}
-            isHighlightVisible={isCompletionHighlightVisible}
+      {status === 'idle' ? (
+        <section className="hero-layout">
+          <SessionPanel
+            selectedMinutes={selectedMinutes}
+            status={status}
+            onSelectMinutes={selectMinutes}
+            onStartSession={startSession}
           />
-        ) : null}
-      </section>
+          <TurtleScene progressRatio={progressRatio} status={status} mode="preview" />
+        </section>
+      ) : null}
 
-      <FriendBoard />
+      {isFocusMode ? (
+        <section className="focus-layout">
+          <FocusHud
+            secondsLeft={secondsLeft}
+            status={status}
+            encouragementMessage={encouragementMessage}
+            onResumeSession={resumeSession}
+            onResetSession={resetSession}
+          />
+          <TurtleScene progressRatio={progressRatio} status={status} mode="focus" />
+          <section className="focus-support">
+            <CarePrompt activeCareOption={activeCareOption} status={status} onSoothe={sootheTurtle} />
+            {status === 'paused' ? <PauseNotice onResumeSession={resumeSession} /> : null}
+          </section>
+        </section>
+      ) : null}
+
+      {status === 'completed' ? (
+        <>
+          <section className="hero-layout">
+            <SessionPanel
+              selectedMinutes={selectedMinutes}
+              status="idle"
+              onSelectMinutes={selectMinutes}
+              onStartSession={startSession}
+            />
+            <TurtleScene progressRatio={progressRatio} status={status} mode="preview" />
+          </section>
+
+          <section className="secondary-layout">
+            <CompletionCard
+              completedSessions={completedSessions}
+              completedMinutes={completedMinutes}
+              isHighlightVisible={isCompletionHighlightVisible}
+            />
+            <HistoryPanel
+              todaySessions={todaySessions}
+              todayMinutes={todayMinutes}
+              recentEntries={recentEntries}
+            />
+            <JourneySummary progressRatio={progressRatio} selectedMinutes={selectedMinutes} />
+          </section>
+
+          <FriendBoard />
+        </>
+      ) : null}
     </main>
   );
 }
