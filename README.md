@@ -33,6 +33,11 @@
 - `docs/implementation-journal-template.md`: 구현 일기 템플릿
 - `AGENTS.md`: 작업 규칙과 구현 원칙
 
+## 배포
+
+- `main` 브랜치에 머지되면 GitHub Actions가 GitHub Pages 배포를 수행한다.
+- 프로젝트 사이트 경로는 기본적으로 `/turtle-study-app/` 기준으로 빌드된다.
+
 ## 제품 한 줄
 
 `공부를 관리하는 타이머`가 아니라 `같이 버텨주는 거북이`를 만드는 것이 목표입니다.
