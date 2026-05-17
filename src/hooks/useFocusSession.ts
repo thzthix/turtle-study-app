@@ -12,6 +12,8 @@ type FocusSessionState = {
   activeCareOption: CareOption | null;
   completedSessions: number;
   completedMinutes: number;
+  lastCompletedMinutes: number | null;
+  completedSignal: number;
   encouragementMessage: string;
   selectMinutes: (minutes: number) => void;
   startSession: () => void;
@@ -37,6 +39,8 @@ export function useFocusSession(): FocusSessionState {
   const [activeCareOption, setActiveCareOption] = useState<CareOption | null>(null);
   const [completedSessions, setCompletedSessions] = useState(0);
   const [completedMinutes, setCompletedMinutes] = useState(0);
+  const [lastCompletedMinutes, setLastCompletedMinutes] = useState<number | null>(null);
+  const [completedSignal, setCompletedSignal] = useState(0);
   const [encouragementMessage, setEncouragementMessage] = useState(idleMessage);
   const handledCheckpointCountRef = useRef(0);
   const cheerfulTimeoutRef = useRef<number | null>(null);
@@ -53,6 +57,8 @@ export function useFocusSession(): FocusSessionState {
           setStatus('completed');
           setCompletedSessions((value) => value + 1);
           setCompletedMinutes((value) => value + selectedMinutes);
+          setLastCompletedMinutes(selectedMinutes);
+          setCompletedSignal((value) => value + 1);
           setEncouragementMessage('끝까지 걸었어요. 거북이가 작은 애교로 당신을 반겨요.');
           return 0;
         }
@@ -144,6 +150,8 @@ export function useFocusSession(): FocusSessionState {
     activeCareOption,
     completedSessions,
     completedMinutes,
+    lastCompletedMinutes,
+    completedSignal,
     encouragementMessage,
     selectMinutes,
     startSession,

@@ -10,3 +10,9 @@ export type FriendTurtle = {
   accent: string;
   supportCount: number;
 };
+
+export type SessionHistoryEntry = {
+  id: string;
+  completedAt: string;
+  minutes: number;
+};
