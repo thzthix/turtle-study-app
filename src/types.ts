@@ -1,4 +1,4 @@
-export type SessionStatus = 'idle' | 'walking' | 'care-needed' | 'cheerful' | 'completed';
+export type SessionStatus = 'idle' | 'walking' | 'care-needed' | 'cheerful' | 'paused' | 'completed';
 
 export type CareOption = 'water' | 'carrot';
 

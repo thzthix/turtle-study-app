@@ -17,12 +17,15 @@ type FocusSessionState = {
   encouragementMessage: string;
   selectMinutes: (minutes: number) => void;
   startSession: () => void;
+  pauseSession: () => void;
+  resumeSession: () => void;
   resetSession: () => void;
   sootheTurtle: (option: CareOption) => void;
 };
 
 const idleMessage = '거북이가 준비를 마쳤어요. 오늘도 천천히, 끝까지 가봐요.';
 const walkingMessage = '거북이가 당신의 호흡에 맞춰 걸어요. 지금은 흐름만 지켜주세요.';
+const pausedMessage = '잠깐 화면을 벗어나 있는 동안 거북이가 조용히 기다리고 있어요.';
 const careMessages: Record<CareOption, string> = {
   water: '조금 목이 말라 보여요. 물 한 모금이면 다시 힘이 날 거예요.',
   carrot: '조용히 잘 버티고 있어요. 당근으로 다정하게 응원해줄까요?',
@@ -119,6 +122,23 @@ export function useFocusSession(): FocusSessionState {
     setEncouragementMessage(walkingMessage);
   };
 
+  const pauseSession = () => {
+    if (status === 'walking' || status === 'care-needed' || status === 'cheerful') {
+      setStatus('paused');
+      setEncouragementMessage(pausedMessage);
+    }
+  };
+
+  const resumeSession = () => {
+    if (status !== 'paused') {
+      return;
+    }
+
+    const nextStatus = activeCareOption === null ? 'walking' : 'care-needed';
+    setStatus(nextStatus);
+    setEncouragementMessage(activeCareOption === null ? walkingMessage : careMessages[activeCareOption]);
+  };
+
   const resetSession = () => {
     if (cheerfulTimeoutRef.current !== null) {
       window.clearTimeout(cheerfulTimeoutRef.current);
@@ -155,6 +175,8 @@ export function useFocusSession(): FocusSessionState {
     encouragementMessage,
     selectMinutes,
     startSession,
+    pauseSession,
+    resumeSession,
     resetSession,
     sootheTurtle,
   };
