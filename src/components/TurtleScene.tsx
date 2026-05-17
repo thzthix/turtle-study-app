@@ -11,6 +11,10 @@ export function TurtleScene({ progressRatio, status }: TurtleSceneProps) {
   };
 
   const bubbleMessage = getBubbleMessage(status);
+  const eyePath = getEyePath(status);
+  const mouthPath = getMouthPath(status);
+  const cheekOpacity = status === 'cheerful' || status === 'completed' ? 1 : 0.45;
+  const moodIcon = getMoodIcon(status);
 
   return (
     <section className="scene-card">
@@ -29,6 +33,12 @@ export function TurtleScene({ progressRatio, status }: TurtleSceneProps) {
         </div>
 
         <div className={`speech-bubble speech-bubble-${status}`}>{bubbleMessage}</div>
+        <div className={`mood-token mood-token-${status}`}>
+          <span className="mood-token-icon" aria-hidden="true">
+            {moodIcon}
+          </span>
+          <span>{getMoodLabel(status)}</span>
+        </div>
 
         <div className={`turtle turtle-${status}`} style={turtleStyle}>
           <svg viewBox="0 0 360 230" aria-hidden="true" className="turtle-illustration">
@@ -51,7 +61,11 @@ export function TurtleScene({ progressRatio, status }: TurtleSceneProps) {
               d="M18 164c17-2 31 0 43 7 8 4 10 14 4 20-16 16-36 22-62 17-13-2-17-18-6-27 6-5 13-12 21-17Z"
               fill="#d7dda1"
             />
-            <circle cx="266" cy="82" r="10" fill="#3f2317" />
+            <ellipse cx="248" cy="104" rx="10" ry="6" fill="#f6d0ba" opacity={cheekOpacity} />
+            <ellipse cx="282" cy="104" rx="10" ry="6" fill="#f6d0ba" opacity={cheekOpacity} />
+            <path d={eyePath.left} fill="none" stroke="#3f2317" strokeWidth="5.5" strokeLinecap="round" />
+            <path d={eyePath.right} fill="none" stroke="#3f2317" strokeWidth="5.5" strokeLinecap="round" />
+            <path d={mouthPath} fill="none" stroke="#4d3225" strokeWidth="4.5" strokeLinecap="round" />
             <path
               d="M73 98l38-29 57-12 48 16 18 38-18 40-55 18-58-19-24-33 6-19-21-10 9-16Z"
               fill="#6f8f65"
@@ -81,5 +95,72 @@ function getBubbleMessage(status: SessionStatus) {
       return '오늘 산책 완주!';
     default:
       return '';
+  }
+}
+
+function getMoodLabel(status: SessionStatus) {
+  switch (status) {
+    case 'idle':
+      return '산책 준비 중';
+    case 'walking':
+      return '차분히 걷는 중';
+    case 'care-needed':
+      return '잠깐 응원이 필요해요';
+    case 'cheerful':
+      return '다시 기분 좋아짐';
+    case 'completed':
+      return '산책 완주 성공';
+    default:
+      return '';
+  }
+}
+
+function getMoodIcon(status: SessionStatus) {
+  switch (status) {
+    case 'idle':
+      return 'o';
+    case 'walking':
+      return '~';
+    case 'care-needed':
+      return '!';
+    case 'cheerful':
+      return '♥';
+    case 'completed':
+      return '★';
+    default:
+      return '';
+  }
+}
+
+function getEyePath(status: SessionStatus) {
+  switch (status) {
+    case 'care-needed':
+      return {
+        left: 'M254 84q7 5 14 0',
+        right: 'M276 84q7 5 14 0',
+      };
+    case 'cheerful':
+    case 'completed':
+      return {
+        left: 'M252 82q8 10 16 0',
+        right: 'M274 82q8 10 16 0',
+      };
+    default:
+      return {
+        left: 'M260 82v1',
+        right: 'M284 82v1',
+      };
+  }
+}
+
+function getMouthPath(status: SessionStatus) {
+  switch (status) {
+    case 'care-needed':
+      return 'M268 98q8 5 16 0';
+    case 'cheerful':
+    case 'completed':
+      return 'M266 96q10 10 20 0';
+    default:
+      return 'M270 98q6 3 12 0';
   }
 }

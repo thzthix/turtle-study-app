@@ -12,6 +12,11 @@ export function CompletionCard({ completedSessions, completedMinutes }: Completi
         오늘은 <strong>{completedSessions}번</strong>의 집중 산책을 마쳤고, 함께 걸은 시간은{' '}
         <strong>{completedMinutes}분</strong>이에요.
       </p>
+      <div className="celebration-strip" aria-hidden="true">
+        <span>♥</span>
+        <span>★</span>
+        <span>♥</span>
+      </div>
       <div className="completion-badges">
         <span>오늘의 인내심 +1</span>
         <span>거북이 애정도 +1</span>
