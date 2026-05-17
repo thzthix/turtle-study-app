@@ -41,6 +41,14 @@ export function TurtleScene({ progressRatio, status }: TurtleSceneProps) {
           </span>
           <span>{getMoodLabel(status)}</span>
         </div>
+        {status === 'completed' ? (
+          <div className="completion-burst" aria-hidden="true">
+            <span className="burst-dot burst-dot-a" />
+            <span className="burst-dot burst-dot-b" />
+            <span className="burst-dot burst-dot-c" />
+            <span className="burst-ring" />
+          </div>
+        ) : null}
 
         <div className={`turtle turtle-${status}`} style={turtleStyle}>
           <svg viewBox="0 0 360 230" aria-hidden="true" className="turtle-illustration">
@@ -106,7 +114,7 @@ function getBubbleMessage(status: SessionStatus) {
     case 'paused':
       return '잠깐 기다리고 있을게요';
     case 'completed':
-      return '오늘 산책 완주!';
+      return '오늘 산책 완주! 아주 잘했어요';
     default:
       return '';
   }
@@ -125,7 +133,7 @@ function getMoodLabel(status: SessionStatus) {
     case 'paused':
       return '잠깐 쉬는 중';
     case 'completed':
-      return '산책 완주 성공';
+      return '완주하고 신난 상태';
     default:
       return '';
   }

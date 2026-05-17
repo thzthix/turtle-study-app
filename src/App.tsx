@@ -21,6 +21,7 @@ export default function App() {
     completedMinutes,
     lastCompletedMinutes,
     completedSignal,
+    isCompletionHighlightVisible,
     encouragementMessage,
     selectMinutes,
     startSession,
@@ -87,7 +88,11 @@ export default function App() {
         <CarePrompt activeCareOption={activeCareOption} status={status} onSoothe={sootheTurtle} />
         {status === 'paused' ? <PauseNotice onResumeSession={resumeSession} /> : null}
         {status === 'completed' ? (
-          <CompletionCard completedSessions={completedSessions} completedMinutes={completedMinutes} />
+          <CompletionCard
+            completedSessions={completedSessions}
+            completedMinutes={completedMinutes}
+            isHighlightVisible={isCompletionHighlightVisible}
+          />
         ) : null}
       </section>
 
