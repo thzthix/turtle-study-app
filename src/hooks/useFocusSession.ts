@@ -3,6 +3,7 @@ import type { CareOption, SessionStatus } from '../types';
 
 const careCheckpoints = [0.4, 0.78];
 const cheerfulDuration = 1800;
+const completionHighlightDuration = 2600;
 
 type FocusSessionState = {
   selectedMinutes: number;
@@ -14,6 +15,7 @@ type FocusSessionState = {
   completedMinutes: number;
   lastCompletedMinutes: number | null;
   completedSignal: number;
+  isCompletionHighlightVisible: boolean;
   encouragementMessage: string;
   selectMinutes: (minutes: number) => void;
   startSession: () => void;
@@ -44,9 +46,11 @@ export function useFocusSession(): FocusSessionState {
   const [completedMinutes, setCompletedMinutes] = useState(0);
   const [lastCompletedMinutes, setLastCompletedMinutes] = useState<number | null>(null);
   const [completedSignal, setCompletedSignal] = useState(0);
+  const [isCompletionHighlightVisible, setIsCompletionHighlightVisible] = useState(false);
   const [encouragementMessage, setEncouragementMessage] = useState(idleMessage);
   const handledCheckpointCountRef = useRef(0);
   const cheerfulTimeoutRef = useRef<number | null>(null);
+  const completionTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (status !== 'walking') {
@@ -62,6 +66,7 @@ export function useFocusSession(): FocusSessionState {
           setCompletedMinutes((value) => value + selectedMinutes);
           setLastCompletedMinutes(selectedMinutes);
           setCompletedSignal((value) => value + 1);
+          setIsCompletionHighlightVisible(true);
           setEncouragementMessage('끝까지 걸었어요. 거북이가 작은 애교로 당신을 반겨요.');
           return 0;
         }
@@ -97,8 +102,28 @@ export function useFocusSession(): FocusSessionState {
       if (cheerfulTimeoutRef.current !== null) {
         window.clearTimeout(cheerfulTimeoutRef.current);
       }
+
+      if (completionTimeoutRef.current !== null) {
+        window.clearTimeout(completionTimeoutRef.current);
+      }
     };
   }, []);
+
+  useEffect(() => {
+    if (!isCompletionHighlightVisible) {
+      return undefined;
+    }
+
+    completionTimeoutRef.current = window.setTimeout(() => {
+      setIsCompletionHighlightVisible(false);
+    }, completionHighlightDuration);
+
+    return () => {
+      if (completionTimeoutRef.current !== null) {
+        window.clearTimeout(completionTimeoutRef.current);
+      }
+    };
+  }, [isCompletionHighlightVisible]);
 
   const progressRatio = useMemo(() => {
     const totalSeconds = selectedMinutes * 60;
@@ -118,6 +143,7 @@ export function useFocusSession(): FocusSessionState {
     handledCheckpointCountRef.current = 0;
     setSecondsLeft(selectedMinutes * 60);
     setActiveCareOption(null);
+    setIsCompletionHighlightVisible(false);
     setStatus('walking');
     setEncouragementMessage(walkingMessage);
   };
@@ -148,6 +174,7 @@ export function useFocusSession(): FocusSessionState {
     setSecondsLeft(selectedMinutes * 60);
     setStatus('idle');
     setActiveCareOption(null);
+    setIsCompletionHighlightVisible(false);
     setEncouragementMessage(idleMessage);
   };
 
@@ -172,6 +199,7 @@ export function useFocusSession(): FocusSessionState {
     completedMinutes,
     lastCompletedMinutes,
     completedSignal,
+    isCompletionHighlightVisible,
     encouragementMessage,
     selectMinutes,
     startSession,
