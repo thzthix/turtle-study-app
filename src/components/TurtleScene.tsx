@@ -7,8 +7,9 @@ type TurtleSceneProps = {
 };
 
 export function TurtleScene({ progressRatio, status, mode }: TurtleSceneProps) {
+  const verticalOffset = getVerticalOffset(progressRatio);
   const turtleStyle = {
-    transform: `translateX(${progressRatio * 100}%)`,
+    transform: `translate(${progressRatio * 100}%, ${verticalOffset}px)`,
   };
 
   const bubbleMessage = getBubbleMessage(status);
@@ -37,9 +38,18 @@ export function TurtleScene({ progressRatio, status, mode }: TurtleSceneProps) {
         <div className="sparkle sparkle-right" />
         <div className="hill hill-back" />
         <div className="hill hill-front" />
-        <div className="path">
-          <div className="path-progress" style={{ width: `${Math.max(12, progressRatio * 100)}%` }} />
-        </div>
+        <svg className="path-svg" viewBox="0 0 640 260" preserveAspectRatio="none" aria-hidden="true">
+          <path
+            className="path-line"
+            d="M24 186C94 138 154 234 238 198C320 164 382 110 462 136C528 158 568 208 616 178"
+          />
+          <path
+            className="path-line-progress"
+            d="M24 186C94 138 154 234 238 198C320 164 382 110 462 136C528 158 568 208 616 178"
+            pathLength="100"
+            style={{ strokeDasharray: `${Math.max(8, progressRatio * 100)} 100` }}
+          />
+        </svg>
 
         {shouldShowBubble ? <div className={`speech-bubble speech-bubble-${status}`}>{bubbleMessage}</div> : null}
         {shouldShowMoodToken ? (
@@ -127,6 +137,13 @@ function getBubbleMessage(status: SessionStatus) {
     default:
       return '';
   }
+}
+
+function getVerticalOffset(progressRatio: number) {
+  const firstWave = Math.sin(progressRatio * Math.PI * 1.8) * 18;
+  const secondWave = Math.sin(progressRatio * Math.PI * 3.2) * 8;
+
+  return Math.round(firstWave + secondWave);
 }
 
 function getMoodLabel(status: SessionStatus) {

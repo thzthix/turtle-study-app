@@ -102,12 +102,16 @@ button {
 }
 
 .scene-card {
-  padding: 26px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
 }
 
 .scene-card-focus {
-  padding: 16px;
-  background: rgba(255, 252, 246, 0.66);
+  padding: 0;
+  background: transparent;
 }
 
 .eyebrow {
@@ -137,6 +141,7 @@ h3 {
   flex-direction: column;
   gap: 24px;
   justify-content: center;
+  padding: 12px 8px 12px 2px;
 }
 
 .panel-copy h1 {
@@ -390,21 +395,27 @@ h3 {
   background: linear-gradient(180deg, #9bc08a, #739e67);
 }
 
-.path {
+.path-svg {
   position: absolute;
-  right: 32px;
-  bottom: 54px;
-  left: 32px;
-  height: 44px;
-  border-radius: 999px;
-  background: rgba(247, 235, 202, 0.58);
-  overflow: hidden;
+  right: 18px;
+  bottom: 18px;
+  left: 18px;
+  height: 236px;
+  overflow: visible;
 }
 
-.path-progress {
-  height: 100%;
-  border-radius: inherit;
-  background: linear-gradient(90deg, rgba(247, 235, 202, 0.5), rgba(255, 255, 255, 0.76));
+.path-line {
+  fill: none;
+  stroke: rgba(244, 223, 177, 0.76);
+  stroke-linecap: round;
+  stroke-width: 28;
+}
+
+.path-line-progress {
+  fill: none;
+  stroke: rgba(255, 250, 238, 0.92);
+  stroke-linecap: round;
+  stroke-width: 16;
 }
 
 .speech-bubble {
@@ -463,7 +474,7 @@ h3 {
 
 .turtle {
   position: absolute;
-  bottom: 70px;
+  bottom: 94px;
   left: 10%;
   width: min(292px, 54vw);
   transform-origin: center bottom;
@@ -1069,6 +1080,7 @@ h3 {
 
   .turtle {
     left: 6%;
+    bottom: 92px;
     width: min(248px, 66vw);
   }
 
@@ -1091,6 +1103,10 @@ h3 {
   .scene-card {
     padding: 20px;
     border-radius: 26px;
+  }
+
+  .scene-card {
+    padding: 0;
   }
 
   .panel-actions,
@@ -1136,7 +1152,7 @@ h3 {
 
   .turtle {
     left: 4%;
-    bottom: 76px;
+    bottom: 84px;
     width: min(210px, 68vw);
   }
 }
