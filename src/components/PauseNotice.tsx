@@ -4,7 +4,7 @@ type PauseNoticeProps = {
 
 export function PauseNotice({ onResumeSession }: PauseNoticeProps) {
   return (
-    <section className="pause-card card">
+    <section className="pause-card">
       <p className="eyebrow">Focus Guard</p>
       <h2>거북이가 당신을 기다리고 있어요</h2>
       <p>

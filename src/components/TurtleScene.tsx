@@ -1,65 +1,145 @@
+import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { SessionStatus } from '../types';
 
 type TurtleSceneProps = {
   progressRatio: number;
   status: SessionStatus;
-  mode: 'preview' | 'focus';
+  selectedMinutes: number;
+  secondsLeft: number;
 };
 
-export function TurtleScene({ progressRatio, status, mode }: TurtleSceneProps) {
-  const verticalOffset = getVerticalOffset(progressRatio);
+type PathPoint = {
+  x: number;
+  y: number;
+  angle: number;
+};
+
+const sceneWidth = 1200;
+const sceneHeight = 520;
+const walkingPath = 'M82 350C198 314 314 318 430 346C534 372 648 372 760 338C872 304 986 300 1110 336';
+const checkpointRatios = [0.4, 0.78];
+
+export function TurtleScene({ progressRatio, status, selectedMinutes, secondsLeft }: TurtleSceneProps) {
+  const pathRef = useRef<SVGPathElement | null>(null);
+  const [pathPoint, setPathPoint] = useState<PathPoint>({ x: 82, y: 350, angle: -2 });
+  const bubbleMessage = getBubbleMessage(status);
+  const milestoneLabel = getMilestoneLabel(progressRatio, status, selectedMinutes, secondsLeft);
+  const eyePaths = getEyePaths(status);
+  const mouthPath = getMouthPath(status);
+  const shouldShowBubble = status !== 'walking' || progressRatio < 0.08;
+  const shouldShowMilestone = status === 'walking' || status === 'cheerful' || status === 'care-needed';
+
+  useLayoutEffect(() => {
+    const pathElement = pathRef.current;
+
+    if (pathElement === null) {
+      return;
+    }
+
+    const length = pathElement.getTotalLength();
+    const currentLength = Math.max(0, Math.min(length, progressRatio * length));
+    const previousPoint = pathElement.getPointAtLength(Math.max(0, currentLength - 4));
+    const currentPoint = pathElement.getPointAtLength(currentLength);
+    const nextPoint = pathElement.getPointAtLength(Math.min(length, currentLength + 4));
+    const angle = Math.atan2(nextPoint.y - previousPoint.y, nextPoint.x - previousPoint.x) * (180 / Math.PI);
+
+    setPathPoint({
+      x: currentPoint.x,
+      y: currentPoint.y,
+      angle: clamp(angle, -12, 12),
+    });
+  }, [progressRatio]);
+
   const turtleStyle = {
-    transform: `translate(${progressRatio * 100}%, ${verticalOffset}px)`,
+    left: `${(pathPoint.x / sceneWidth) * 100}%`,
+    top: `${(pathPoint.y / sceneHeight) * 100}%`,
+    transform: `translate(-40%, -79%) rotate(${pathPoint.angle}deg)`,
   };
 
-  const bubbleMessage = getBubbleMessage(status);
-  const eyePath = getEyePath(status);
-  const mouthPath = getMouthPath(status);
-  const cheekOpacity = status === 'cheerful' || status === 'completed' ? 1 : 0.45;
-  const moodIcon = getMoodIcon(status);
-  const shouldShowHeader = mode === 'preview';
-  const shouldShowBubble =
-    mode === 'preview' || status === 'care-needed' || status === 'paused' || status === 'completed';
-  const shouldShowMoodToken = mode === 'preview';
+  const checkpointMarkers = useMemo(() => {
+    const pathElement = pathRef.current;
+
+    if (pathElement === null) {
+      return [];
+    }
+
+    const totalLength = pathElement.getTotalLength();
+
+    return checkpointRatios.map((ratio, index) => {
+      const point = pathElement.getPointAtLength(totalLength * ratio);
+
+      return {
+        id: ratio,
+        left: `${(point.x / sceneWidth) * 100}%`,
+        top: `${((point.y - 40) / sceneHeight) * 100}%`,
+        label: index === 0 ? '물 한 모금' : '당근 응원',
+        isActive: progressRatio >= ratio,
+      };
+    });
+  }, [progressRatio]);
 
   return (
-    <section className={mode === 'focus' ? 'scene-card scene-card-focus' : 'scene-card'}>
-      {shouldShowHeader ? (
-        <div className="scene-header">
-          <p className="eyebrow">Turtle Companion</p>
-          <h2>오늘의 산책길</h2>
-        </div>
-      ) : null}
-
-      <div className={mode === 'focus' ? 'scene scene-focus' : 'scene'}>
-        <div className="scene-glow" />
+    <section className={`scene-shell scene-shell-${status}`}>
+      <div className="scene">
+        <div className="scene-sky-glow scene-sky-glow-left" />
+        <div className="scene-sky-glow scene-sky-glow-right" />
+        <div className="scene-cloud cloud-left" />
+        <div className="scene-cloud cloud-right" />
         <div className="sun" />
-        <div className="sparkle sparkle-left" />
-        <div className="sparkle sparkle-right" />
         <div className="hill hill-back" />
+        <div className="hill hill-middle" />
         <div className="hill hill-front" />
-        <svg className="path-svg" viewBox="0 0 640 260" preserveAspectRatio="none" aria-hidden="true">
+        <div className="destination-tree" aria-hidden="true">
+          <span className="tree-top" />
+          <span className="tree-trunk" />
+        </div>
+        <div className="flower-cluster flower-cluster-left" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </div>
+        <div className="flower-cluster flower-cluster-right" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </div>
+
+        <svg className="path-svg" viewBox={`0 0 ${sceneWidth} ${sceneHeight}`} preserveAspectRatio="none" aria-hidden="true">
+          <path
+            ref={pathRef}
+            className="path-line path-line-shadow"
+            d={walkingPath}
+            pathLength="100"
+          />
           <path
             className="path-line"
-            d="M24 186C94 138 154 234 238 198C320 164 382 110 462 136C528 158 568 208 616 178"
+            d={walkingPath}
+            pathLength="100"
           />
           <path
             className="path-line-progress"
-            d="M24 186C94 138 154 234 238 198C320 164 382 110 462 136C528 158 568 208 616 178"
+            d={walkingPath}
             pathLength="100"
-            style={{ strokeDasharray: `${Math.max(8, progressRatio * 100)} 100` }}
+            style={{ strokeDasharray: `${Math.max(3, progressRatio * 100)} 100` }}
           />
         </svg>
 
-        {shouldShowBubble ? <div className={`speech-bubble speech-bubble-${status}`}>{bubbleMessage}</div> : null}
-        {shouldShowMoodToken ? (
-          <div className={`mood-token mood-token-${status}`}>
-            <span className="mood-token-icon" aria-hidden="true">
-              {moodIcon}
-            </span>
-            <span>{getMoodLabel(status)}</span>
+        <div className="start-sign">출발</div>
+        <div className="finish-sign">도착</div>
+
+        {checkpointMarkers.map((marker) => (
+          <div
+            key={marker.id}
+            className={marker.isActive ? 'path-marker path-marker-active' : 'path-marker'}
+            style={{ left: marker.left, top: marker.top }}
+          >
+            {marker.label}
           </div>
-        ) : null}
+        ))}
+
+        {shouldShowBubble ? <div className={`speech-bubble speech-bubble-${status}`}>{bubbleMessage}</div> : null}
+        {shouldShowMilestone ? <div className="milestone-caption">{milestoneLabel}</div> : null}
+
         {status === 'completed' ? (
           <div className="completion-burst" aria-hidden="true">
             <span className="burst-dot burst-dot-a" />
@@ -70,48 +150,40 @@ export function TurtleScene({ progressRatio, status, mode }: TurtleSceneProps) {
         ) : null}
 
         <div className={`turtle turtle-${status}`} style={turtleStyle}>
-          <svg viewBox="0 0 360 230" aria-hidden="true" className="turtle-illustration">
+          <span className="turtle-shadow" aria-hidden="true" />
+          <svg viewBox="0 0 320 200" aria-hidden="true" className="turtle-illustration">
             <g className="tail-group">
-              <path
-                d="M18 164c17-2 31 0 43 7 8 4 10 14 4 20-16 16-36 22-62 17-13-2-17-18-6-27 6-5 13-12 21-17Z"
-                fill="#d7dda1"
-              />
+              <path d="M32 126c-12 4-22 12-29 23-4 8 1 15 10 15 20-1 34-9 43-25 5-9-5-17-24-13Z" fill="#dbe6a9" />
             </g>
             <g className="back-leg-group">
-              <path
-                d="M124 174c-14 23-31 37-52 43-17 5-31-11-24-27 10-21 29-37 57-48 18-7 30 16 19 32Z"
-                fill="#d7dda1"
-              />
+              <ellipse cx="100" cy="154" rx="18" ry="24" fill="#f7f1d8" />
+              <ellipse cx="154" cy="158" rx="17" ry="23" fill="#f3ecd1" />
             </g>
             <g className="front-leg-group">
-              <path
-                d="M216 176c-14 27-34 44-60 51-16 4-28-13-19-28 14-24 35-41 66-50 17-5 23 13 13 27Z"
-                fill="#d7dda1"
-              />
-              <path
-                d="M248 142c18 12 30 36 32 68 1 12-11 19-21 12-29-18-41-49-39-76 1-12 17-14 28-4Z"
-                fill="#c7cd90"
-              />
+              <ellipse cx="212" cy="156" rx="18" ry="24" fill="#f7f1d8" />
+              <ellipse cx="248" cy="149" rx="17" ry="22" fill="#f4edd4" />
+            </g>
+            <g className="body-group">
+              <path d="M72 124c0-34 36-62 86-62h33c31 0 57 18 72 42 10 16 11 34 4 50-8 18-26 29-50 29H123c-31 0-51-10-51-59Z" fill="#eef1cb" />
+              <path d="M106 126c14-8 28-11 43-11 19 0 34 5 50 14 19 10 45 10 75-2l-6 20c-6 19-24 31-44 31H126c-22 0-35-15-20-52Z" fill="#dbefc0" />
             </g>
             <g className="shell-group">
-              <ellipse cx="145" cy="122" rx="110" ry="76" fill="#7fa16c" />
-              <ellipse cx="145" cy="143" rx="118" ry="30" fill="#89a96f" />
-              <path
-                d="M73 98l38-29 57-12 48 16 18 38-18 40-55 18-58-19-24-33 6-19-21-10 9-16Z"
-                fill="#6f8f65"
-              />
-              <path d="M121 76 154 67 186 77 170 109 133 115 108 95Z" fill="#7d9c73" />
-              <path d="M186 77 216 88 207 127 170 109Z" fill="#75956d" />
-              <path d="M133 115 170 109 165 148 122 148 100 126Z" fill="#6d8c63" />
-              <path d="M170 109 207 127 195 157 165 148Z" fill="#67885f" />
+              <path d="M83 112c0-43 40-76 93-76 55 0 98 34 98 82 0 18-9 32-20 40H99c-10-10-16-25-16-46Z" fill="#b7ecae" />
+              <path d="M103 118c8-33 36-58 73-61 37-3 71 16 90 47-2 27-18 46-42 54H114c-16-12-22-23-11-40Z" fill="#9ed58c" />
+              <path d="M112 85c20-18 45-28 73-28 34 0 65 14 86 39" fill="none" stroke="#7ab067" strokeWidth="8" strokeLinecap="round" />
+              <path d="M126 101c18-10 39-16 62-16 28 0 53 8 75 23" fill="none" stroke="#7ab067" strokeWidth="6" strokeLinecap="round" />
+              <path d="M106 116c13 13 17 28 15 42" fill="none" stroke="#89bf73" strokeWidth="6" strokeLinecap="round" />
+              <path d="M146 92c-5 21-4 43 3 66" fill="none" stroke="#89bf73" strokeWidth="5" strokeLinecap="round" />
+              <path d="M189 86c0 25 3 49 9 72" fill="none" stroke="#89bf73" strokeWidth="5" strokeLinecap="round" />
+              <path d="M230 95c4 18 8 38 6 60" fill="none" stroke="#89bf73" strokeWidth="5" strokeLinecap="round" />
             </g>
             <g className="head-group">
-              <ellipse cx="246" cy="96" rx="38" ry="46" fill="#d7dda1" />
-              <ellipse cx="241" cy="105" rx="8" ry="5" fill="#f6d0ba" opacity={cheekOpacity} />
-              <ellipse cx="265" cy="105" rx="8" ry="5" fill="#f6d0ba" opacity={cheekOpacity} />
-              <path d={eyePath.left} fill="none" stroke="#3f2317" strokeWidth="5.5" strokeLinecap="round" />
-              <path d={eyePath.right} fill="none" stroke="#3f2317" strokeWidth="5.5" strokeLinecap="round" />
-              <path d={mouthPath} fill="none" stroke="#4d3225" strokeWidth="4.5" strokeLinecap="round" />
+              <ellipse cx="256" cy="111" rx="34" ry="31" fill="#f8f3da" />
+              <ellipse cx="247" cy="121" rx="8" ry="5" fill="#f4cfc0" opacity={status === 'cheerful' || status === 'completed' ? 0.95 : 0.45} />
+              <ellipse cx="269" cy="121" rx="8" ry="5" fill="#f4cfc0" opacity={status === 'cheerful' || status === 'completed' ? 0.95 : 0.45} />
+              <path d={eyePaths.left} fill="none" stroke="#332317" strokeWidth="5" strokeLinecap="round" />
+              <path d={eyePaths.right} fill="none" stroke="#332317" strokeWidth="5" strokeLinecap="round" />
+              <path d={mouthPath} fill="none" stroke="#5f4131" strokeWidth="4" strokeLinecap="round" />
             </g>
           </svg>
         </div>
@@ -123,89 +195,66 @@ export function TurtleScene({ progressRatio, status, mode }: TurtleSceneProps) {
 function getBubbleMessage(status: SessionStatus) {
   switch (status) {
     case 'idle':
-      return '출발할 준비 끝';
+      return '시간을 정하면 오늘 산책이 시작돼요.';
     case 'walking':
-      return '같이 천천히 가요';
+      return '같이 호흡 맞춰 걸어볼까요?';
     case 'care-needed':
-      return '잠깐 다정함이 필요해요';
+      return '잠깐 다정함이 필요해요.';
     case 'cheerful':
-      return '기분이 다시 말랑해졌어요';
+      return '덕분에 다시 힘이 났어요.';
     case 'paused':
-      return '잠깐 기다리고 있을게요';
+      return '여기서 조용히 기다리고 있을게요.';
     case 'completed':
-      return '오늘 산책 완주! 아주 잘했어요';
+      return '끝까지 같이 걸었어요. 정말 잘했어요.';
     default:
       return '';
   }
 }
 
-function getVerticalOffset(progressRatio: number) {
-  const firstWave = Math.sin(progressRatio * Math.PI * 1.8) * 18;
-  const secondWave = Math.sin(progressRatio * Math.PI * 3.2) * 8;
-
-  return Math.round(firstWave + secondWave);
-}
-
-function getMoodLabel(status: SessionStatus) {
-  switch (status) {
-    case 'idle':
-      return '산책 준비 중';
-    case 'walking':
-      return '차분히 걷는 중';
-    case 'care-needed':
-      return '잠깐 응원이 필요해요';
-    case 'cheerful':
-      return '다시 기분 좋아짐';
-    case 'paused':
-      return '잠깐 쉬는 중';
-    case 'completed':
-      return '완주하고 신난 상태';
-    default:
-      return '';
+function getMilestoneLabel(progressRatio: number, status: SessionStatus, selectedMinutes: number, secondsLeft: number) {
+  if (status === 'care-needed') {
+    return '잠깐 챙겨주고 다시 흐름으로 돌아가요.';
   }
-}
 
-function getMoodIcon(status: SessionStatus) {
-  switch (status) {
-    case 'idle':
-      return 'o';
-    case 'walking':
-      return '∞';
-    case 'care-needed':
-      return '!';
-    case 'cheerful':
-      return '♥';
-    case 'paused':
-      return 'Z';
-    case 'completed':
-      return '★';
-    default:
-      return '';
+  if (status === 'cheerful') {
+    return '다시 리듬을 찾았어요.';
   }
+
+  const walkedMinutes = Math.max(0, selectedMinutes - Math.ceil(secondsLeft / 60));
+
+  if (progressRatio < 0.34) {
+    return `${walkedMinutes}분째, 이제 막 리듬이 만들어지고 있어요.`;
+  }
+
+  if (progressRatio < 0.7) {
+    return `${walkedMinutes}분째, 길 한가운데를 차분히 지나가는 중이에요.`;
+  }
+
+  return `${walkedMinutes}분째, 거의 다 왔어요. 거북이도 끝을 보고 있어요.`;
 }
 
-function getEyePath(status: SessionStatus) {
+function getEyePaths(status: SessionStatus) {
   switch (status) {
     case 'care-needed':
       return {
-        left: 'M241 90q5 4 10 0',
-        right: 'M257 90q5 4 10 0',
+        left: 'M245 107q6 4 12 0',
+        right: 'M261 107q6 4 12 0',
       };
     case 'cheerful':
     case 'completed':
       return {
-        left: 'M239 88q6 7 12 0',
-        right: 'M255 88q6 7 12 0',
+        left: 'M244 103q7 8 14 0',
+        right: 'M260 103q7 8 14 0',
       };
     case 'paused':
       return {
-        left: 'M239 91q6 -4 12 0',
-        right: 'M255 91q6 -4 12 0',
+        left: 'M244 109q7 -3 14 0',
+        right: 'M260 109q7 -3 14 0',
       };
     default:
       return {
-        left: 'M246 89v1',
-        right: 'M262 89v1',
+        left: 'M251 104v1',
+        right: 'M267 104v1',
       };
   }
 }
@@ -213,13 +262,17 @@ function getEyePath(status: SessionStatus) {
 function getMouthPath(status: SessionStatus) {
   switch (status) {
     case 'care-needed':
-      return 'M244 104q6 4 12 0';
+      return 'M250 122q6 3 12 0';
     case 'cheerful':
     case 'completed':
-      return 'M242 103q8 7 16 0';
+      return 'M248 120q10 8 20 0';
     case 'paused':
-      return 'M245 106q5 -2 10 0';
+      return 'M250 123q7 -2 14 0';
     default:
-      return 'M246 104q4 3 8 0';
+      return 'M251 121q5 4 10 0';
   }
+}
+
+function clamp(value: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, value));
 }
