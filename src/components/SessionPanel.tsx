@@ -1,0 +1,76 @@
+import type { SessionStatus } from '../types';
+
+type SessionPanelProps = {
+  selectedMinutes: number;
+  secondsLeft: number;
+  status: SessionStatus;
+  encouragementMessage: string;
+  onSelectMinutes: (minutes: number) => void;
+  onStartSession: () => void;
+  onResetSession: () => void;
+};
+
+const presets = [15, 25, 40, 55];
+
+export function SessionPanel({
+  selectedMinutes,
+  secondsLeft,
+  status,
+  encouragementMessage,
+  onSelectMinutes,
+  onStartSession,
+  onResetSession,
+}: SessionPanelProps) {
+  const isSessionActive = status === 'walking' || status === 'care-needed' || status === 'cheerful';
+  const buttonLabel = status === 'completed' ? '다시 산책 시작하기' : '집중 산책 시작하기';
+
+  return (
+    <section className="session-panel card">
+      <div className="panel-copy">
+        <p className="eyebrow">Focus Session</p>
+        <h1>거북이와 조용히 버티는 집중 루프</h1>
+        <p className="panel-description">
+          화면은 당신을 재촉하지 않고, 거북이는 당신이 끝까지 가는 동안 옆에서 천천히 함께 걸어요.
+        </p>
+      </div>
+
+      <div className="timer-box">
+        <p className="timer-label">남은 시간</p>
+        <strong className="timer-value">{formatTime(secondsLeft)}</strong>
+        <p className="timer-message">{encouragementMessage}</p>
+      </div>
+
+      <div className="preset-list" aria-label="집중 시간 선택">
+        {presets.map((minutes) => (
+          <button
+            key={minutes}
+            type="button"
+            className={minutes === selectedMinutes ? 'preset-button active' : 'preset-button'}
+            onClick={() => onSelectMinutes(minutes)}
+            disabled={isSessionActive}
+          >
+            {minutes}분
+          </button>
+        ))}
+      </div>
+
+      <div className="panel-actions">
+        <button type="button" className="primary-button" onClick={onStartSession} disabled={isSessionActive}>
+          {buttonLabel}
+        </button>
+        <button type="button" className="secondary-button" onClick={onResetSession}>
+          처음으로
+        </button>
+      </div>
+    </section>
+  );
+}
+
+function formatTime(totalSeconds: number) {
+  const minutes = Math.floor(totalSeconds / 60)
+    .toString()
+    .padStart(2, '0');
+  const seconds = (totalSeconds % 60).toString().padStart(2, '0');
+
+  return `${minutes}:${seconds}`;
+}
