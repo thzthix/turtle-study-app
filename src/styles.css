@@ -280,6 +280,29 @@ h3 {
     radial-gradient(circle at 22% 78%, rgba(255, 240, 210, 0.45), transparent 20%);
 }
 
+.sparkle {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: rgba(255, 251, 237, 0.8);
+  box-shadow:
+    0 0 0 6px rgba(255, 251, 237, 0.14),
+    0 0 22px rgba(255, 248, 214, 0.55);
+  animation: sparkle-drift 5.8s ease-in-out infinite;
+}
+
+.sparkle-left {
+  top: 120px;
+  left: 96px;
+}
+
+.sparkle-right {
+  top: 92px;
+  right: 148px;
+  animation-delay: 1.4s;
+}
+
 .sun {
   position: absolute;
   top: 46px;
@@ -392,7 +415,7 @@ h3 {
 }
 
 .turtle-walking {
-  animation: turtle-walk 2.8s ease-in-out infinite;
+  animation: turtle-walk 2.4s ease-in-out infinite;
 }
 
 .turtle-care-needed {
@@ -406,6 +429,57 @@ h3 {
 
 .turtle-completed {
   animation: turtle-cheer 1.9s ease-in-out infinite;
+}
+
+.turtle-paused {
+  animation: turtle-rest 3.2s ease-in-out infinite;
+}
+
+.shell-group {
+  transform-origin: 145px 126px;
+}
+
+.head-group {
+  transform-origin: 232px 118px;
+}
+
+.front-leg-group,
+.back-leg-group,
+.tail-group {
+  transform-origin: center;
+}
+
+.turtle-walking .shell-group {
+  animation: shell-bob 1.2s ease-in-out infinite;
+}
+
+.turtle-walking .head-group {
+  animation: head-bob 1.2s ease-in-out infinite;
+}
+
+.turtle-walking .front-leg-group {
+  animation: front-leg-step 1.2s ease-in-out infinite;
+}
+
+.turtle-walking .back-leg-group {
+  animation: back-leg-step 1.2s ease-in-out infinite;
+}
+
+.turtle-walking .tail-group {
+  animation: tail-sway 1.7s ease-in-out infinite;
+}
+
+.turtle-cheerful .head-group,
+.turtle-completed .head-group {
+  animation: happy-nod 0.9s ease-in-out infinite;
+}
+
+.turtle-paused .head-group {
+  animation: sleepy-head 2.8s ease-in-out infinite;
+}
+
+.turtle-paused .shell-group {
+  animation: shell-rest 2.8s ease-in-out infinite;
 }
 
 .summary-metrics {
@@ -592,7 +666,11 @@ h3 {
     translate: 0 0;
   }
 
-  50% {
+  25% {
+    translate: 0 -5px;
+  }
+
+  75% {
     translate: 0 -8px;
   }
 }
@@ -616,6 +694,118 @@ h3 {
 
   50% {
     transform: translateY(-6px) scale(1.01);
+  }
+}
+
+@keyframes turtle-rest {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes shell-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes head-bob {
+  0%,
+  100% {
+    transform: rotate(0deg) translateY(0);
+  }
+
+  50% {
+    transform: rotate(2.2deg) translateY(-2px);
+  }
+}
+
+@keyframes front-leg-step {
+  0%,
+  100% {
+    transform: rotate(0deg) translateY(0);
+  }
+
+  50% {
+    transform: rotate(4deg) translateY(3px);
+  }
+}
+
+@keyframes back-leg-step {
+  0%,
+  100% {
+    transform: rotate(0deg) translateY(0);
+  }
+
+  50% {
+    transform: rotate(-4deg) translateY(-2px);
+  }
+}
+
+@keyframes tail-sway {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  50% {
+    transform: rotate(-4deg);
+  }
+}
+
+@keyframes happy-nod {
+  0%,
+  100% {
+    transform: rotate(0deg) translateY(0);
+  }
+
+  50% {
+    transform: rotate(5deg) translateY(-2px);
+  }
+}
+
+@keyframes sleepy-head {
+  0%,
+  100% {
+    transform: rotate(0deg) translateY(0);
+  }
+
+  50% {
+    transform: rotate(-3deg) translateY(2px);
+  }
+}
+
+@keyframes shell-rest {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes sparkle-drift {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.45;
+  }
+
+  50% {
+    transform: translateY(-10px) scale(1.08);
+    opacity: 0.85;
   }
 }
 
