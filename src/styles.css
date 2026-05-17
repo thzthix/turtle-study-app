@@ -72,7 +72,7 @@ button {
 
 .secondary-layout {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 20px;
   margin-top: 20px;
 }
@@ -420,6 +420,38 @@ h3 {
 .summary-metrics span,
 .friend-distance {
   color: #617164;
+}
+
+.history-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.history-metrics article,
+.history-item {
+  padding: 16px;
+  border-radius: 20px;
+  background: rgba(248, 243, 229, 0.9);
+}
+
+.history-metrics strong,
+.history-item strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 1.3rem;
+}
+
+.history-metrics span,
+.history-item span,
+.history-empty {
+  color: #607063;
+}
+
+.history-list {
+  display: grid;
+  gap: 12px;
 }
 
 .completion-badges span {

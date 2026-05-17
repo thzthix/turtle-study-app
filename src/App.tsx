@@ -1,10 +1,13 @@
+import { useEffect, useRef } from 'react';
 import { CarePrompt } from './components/CarePrompt';
 import { CompletionCard } from './components/CompletionCard';
 import { FriendBoard } from './components/FriendBoard';
+import { HistoryPanel } from './components/HistoryPanel';
 import { JourneySummary } from './components/JourneySummary';
 import { SessionPanel } from './components/SessionPanel';
 import { TurtleScene } from './components/TurtleScene';
 import { useFocusSession } from './hooks/useFocusSession';
+import { useSessionHistory } from './hooks/useSessionHistory';
 
 export default function App() {
   const {
@@ -15,12 +18,28 @@ export default function App() {
     activeCareOption,
     completedSessions,
     completedMinutes,
+    lastCompletedMinutes,
+    completedSignal,
     encouragementMessage,
     selectMinutes,
     startSession,
     resetSession,
     sootheTurtle,
   } = useFocusSession();
+  const { todaySessions, todayMinutes, recentEntries, addCompletedSession } = useSessionHistory();
+  const handledCompletedSignalRef = useRef(0);
+
+  useEffect(() => {
+    if (completedSignal === 0 || completedSignal === handledCompletedSignalRef.current) {
+      return;
+    }
+
+    handledCompletedSignalRef.current = completedSignal;
+
+    if (lastCompletedMinutes !== null) {
+      addCompletedSession(lastCompletedMinutes);
+    }
+  }, [addCompletedSession, completedSignal, lastCompletedMinutes]);
 
   return (
     <main className="app-shell">
@@ -42,6 +61,11 @@ export default function App() {
 
       <section className="secondary-layout">
         <JourneySummary progressRatio={progressRatio} selectedMinutes={selectedMinutes} />
+        <HistoryPanel
+          todaySessions={todaySessions}
+          todayMinutes={todayMinutes}
+          recentEntries={recentEntries}
+        />
         <CarePrompt activeCareOption={activeCareOption} onSoothe={sootheTurtle} />
         {status === 'completed' ? (
           <CompletionCard completedSessions={completedSessions} completedMinutes={completedMinutes} />
