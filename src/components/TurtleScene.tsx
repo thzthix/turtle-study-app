@@ -91,6 +91,8 @@ function getBubbleMessage(status: SessionStatus) {
       return '잠깐 다정함이 필요해요';
     case 'cheerful':
       return '기분이 다시 말랑해졌어요';
+    case 'paused':
+      return '잠깐 기다리고 있을게요';
     case 'completed':
       return '오늘 산책 완주!';
     default:
@@ -108,6 +110,8 @@ function getMoodLabel(status: SessionStatus) {
       return '잠깐 응원이 필요해요';
     case 'cheerful':
       return '다시 기분 좋아짐';
+    case 'paused':
+      return '잠깐 쉬는 중';
     case 'completed':
       return '산책 완주 성공';
     default:
@@ -125,6 +129,8 @@ function getMoodIcon(status: SessionStatus) {
       return '!';
     case 'cheerful':
       return '♥';
+    case 'paused':
+      return 'z';
     case 'completed':
       return '★';
     default:
@@ -145,6 +151,11 @@ function getEyePath(status: SessionStatus) {
         left: 'M252 82q8 10 16 0',
         right: 'M274 82q8 10 16 0',
       };
+    case 'paused':
+      return {
+        left: 'M252 84q8 -5 16 0',
+        right: 'M274 84q8 -5 16 0',
+      };
     default:
       return {
         left: 'M260 82v1',
@@ -160,6 +171,8 @@ function getMouthPath(status: SessionStatus) {
     case 'cheerful':
     case 'completed':
       return 'M266 96q10 10 20 0';
+    case 'paused':
+      return 'M269 99q7 -2 14 0';
     default:
       return 'M270 98q6 3 12 0';
   }

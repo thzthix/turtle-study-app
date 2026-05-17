@@ -159,6 +159,11 @@ h3 {
   background: rgba(248, 215, 214, 0.92);
 }
 
+.status-pill-paused {
+  color: #5b5a69;
+  background: rgba(226, 227, 239, 0.96);
+}
+
 .panel-description,
 .timer-message,
 .care-card p,
@@ -366,6 +371,10 @@ h3 {
   background: rgba(249, 220, 220, 0.92);
 }
 
+.mood-token-paused .mood-token-icon {
+  background: rgba(228, 229, 240, 0.96);
+}
+
 .turtle {
   position: absolute;
   bottom: 70px;
@@ -452,6 +461,10 @@ h3 {
 .history-list {
   display: grid;
   gap: 12px;
+}
+
+.pause-card p {
+  color: #5f6667;
 }
 
 .completion-badges span {

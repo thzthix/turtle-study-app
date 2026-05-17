@@ -1,12 +1,13 @@
-import type { CareOption } from '../types';
+import type { CareOption, SessionStatus } from '../types';
 
 type CarePromptProps = {
   activeCareOption: CareOption | null;
+  status: SessionStatus;
   onSoothe: (option: CareOption) => void;
 };
 
-export function CarePrompt({ activeCareOption, onSoothe }: CarePromptProps) {
-  if (activeCareOption === null) {
+export function CarePrompt({ activeCareOption, status, onSoothe }: CarePromptProps) {
+  if (activeCareOption === null || status !== 'care-needed') {
     return null;
   }
 

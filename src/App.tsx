@@ -4,6 +4,7 @@ import { CompletionCard } from './components/CompletionCard';
 import { FriendBoard } from './components/FriendBoard';
 import { HistoryPanel } from './components/HistoryPanel';
 import { JourneySummary } from './components/JourneySummary';
+import { PauseNotice } from './components/PauseNotice';
 import { SessionPanel } from './components/SessionPanel';
 import { TurtleScene } from './components/TurtleScene';
 import { useFocusSession } from './hooks/useFocusSession';
@@ -23,6 +24,8 @@ export default function App() {
     encouragementMessage,
     selectMinutes,
     startSession,
+    pauseSession,
+    resumeSession,
     resetSession,
     sootheTurtle,
   } = useFocusSession();
@@ -41,6 +44,20 @@ export default function App() {
     }
   }, [addCompletedSession, completedSignal, lastCompletedMinutes]);
 
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        pauseSession();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [pauseSession]);
+
   return (
     <main className="app-shell">
       <div className="background-orb orb-left" />
@@ -54,6 +71,7 @@ export default function App() {
           encouragementMessage={encouragementMessage}
           onSelectMinutes={selectMinutes}
           onStartSession={startSession}
+          onResumeSession={resumeSession}
           onResetSession={resetSession}
         />
         <TurtleScene progressRatio={progressRatio} status={status} />
@@ -66,7 +84,8 @@ export default function App() {
           todayMinutes={todayMinutes}
           recentEntries={recentEntries}
         />
-        <CarePrompt activeCareOption={activeCareOption} onSoothe={sootheTurtle} />
+        <CarePrompt activeCareOption={activeCareOption} status={status} onSoothe={sootheTurtle} />
+        {status === 'paused' ? <PauseNotice onResumeSession={resumeSession} /> : null}
         {status === 'completed' ? (
           <CompletionCard completedSessions={completedSessions} completedMinutes={completedMinutes} />
         ) : null}

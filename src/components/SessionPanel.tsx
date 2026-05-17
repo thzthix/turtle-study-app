@@ -7,6 +7,7 @@ type SessionPanelProps = {
   encouragementMessage: string;
   onSelectMinutes: (minutes: number) => void;
   onStartSession: () => void;
+  onResumeSession: () => void;
   onResetSession: () => void;
 };
 
@@ -19,10 +20,12 @@ export function SessionPanel({
   encouragementMessage,
   onSelectMinutes,
   onStartSession,
+  onResumeSession,
   onResetSession,
 }: SessionPanelProps) {
   const isSessionActive = status === 'walking' || status === 'care-needed' || status === 'cheerful';
-  const buttonLabel = status === 'completed' ? '다시 산책 시작하기' : '집중 산책 시작하기';
+  const canStartSession = status === 'idle' || status === 'completed';
+  const isPaused = status === 'paused';
   const statusLabel = getStatusLabel(status);
 
   return (
@@ -49,7 +52,7 @@ export function SessionPanel({
             type="button"
             className={minutes === selectedMinutes ? 'preset-button active' : 'preset-button'}
             onClick={() => onSelectMinutes(minutes)}
-            disabled={isSessionActive}
+            disabled={isSessionActive || isPaused}
           >
             {minutes}분
           </button>
@@ -57,9 +60,15 @@ export function SessionPanel({
       </div>
 
       <div className="panel-actions">
-        <button type="button" className="primary-button" onClick={onStartSession} disabled={isSessionActive}>
-          {buttonLabel}
-        </button>
+        {isPaused ? (
+          <button type="button" className="primary-button" onClick={onResumeSession}>
+            산책 이어가기
+          </button>
+        ) : (
+          <button type="button" className="primary-button" onClick={onStartSession} disabled={!canStartSession}>
+            {status === 'completed' ? '다시 산책 시작하기' : '집중 산책 시작하기'}
+          </button>
+        )}
         <button type="button" className="secondary-button" onClick={onResetSession}>
           처음으로
         </button>
@@ -87,6 +96,8 @@ function getStatusLabel(status: SessionStatus) {
       return '돌봄 체크인';
     case 'cheerful':
       return '기분 회복 중';
+    case 'paused':
+      return '잠깐 멈춤';
     case 'completed':
       return '세션 완료';
     default:
