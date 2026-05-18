@@ -11,22 +11,25 @@ export function CarePrompt({ activeCareOption, status, onSoothe }: CarePromptPro
     return null;
   }
 
-  const title =
-    activeCareOption === 'water' ? '거북이가 물 한 모금 기다려요' : '거북이가 다정한 당근 응원을 기다려요';
-  const description =
-    activeCareOption === 'water'
-      ? '길게 보지 않아도 괜찮아요. 물 한 모금만 건네고 다시 집중 흐름으로 돌아가면 됩니다.'
-      : '힘든 구간을 넘길 수 있게 짧고 부드럽게 응원해주세요.';
+  const title = activeCareOption === 'water' ? '잠깐 물 한 모금' : '잠깐 당근 응원';
   const buttonLabel = activeCareOption === 'water' ? '물 주기' : '당근 주기';
+  const iconLabel = activeCareOption === 'water' ? '물' : '당근';
 
   return (
     <section className="care-card">
-      <p className="eyebrow">Care Check</p>
-      <h2>{title}</h2>
-      <p>{description}</p>
-      <button type="button" className="primary-button" onClick={() => onSoothe(activeCareOption)}>
-        {buttonLabel}
-      </button>
+      <p className="eyebrow">care moments</p>
+      <div className="care-card-row">
+        <div className="care-card-copy">
+          <h2>{title}</h2>
+          <p>길게 보지 않아도 괜찮아요.</p>
+        </div>
+        <button type="button" className="care-option-button" onClick={() => onSoothe(activeCareOption)}>
+          <span className="care-option-icon" aria-hidden="true">
+            {iconLabel}
+          </span>
+          <span className="care-option-text">{buttonLabel}</span>
+        </button>
+      </div>
     </section>
   );
 }

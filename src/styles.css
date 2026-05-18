@@ -329,7 +329,6 @@ h3 {
 
 .speech-bubble,
 .milestone-caption,
-.idle-invitation,
 .focus-hud,
 .care-card,
 .pause-card,
@@ -455,43 +454,29 @@ h3 {
   animation: sleepy-head 2.6s ease-in-out infinite;
 }
 
-.idle-invitation {
-  position: absolute;
-  left: 28px;
-  bottom: 28px;
-  max-width: 420px;
-  padding: 24px 24px 22px;
-  border: 1px solid rgba(255, 255, 255, 0.42);
-  border-radius: 30px;
-  background: rgba(255, 252, 246, 0.7);
-  box-shadow: 0 16px 36px rgba(117, 121, 92, 0.11);
-}
-
-.idle-invitation h2 {
-  margin-bottom: 10px;
-  font-size: clamp(1.5rem, 2.5vw, 2rem);
-  line-height: 1.14;
-}
-
-.idle-invitation p:last-of-type {
-  margin-bottom: 20px;
-  color: #5b685d;
-}
-
 .focus-hud {
   position: absolute;
-  top: 26px;
-  right: 26px;
-  left: 26px;
+  top: 22px;
+  left: 50%;
   display: grid;
-  grid-template-columns: 158px minmax(0, 1fr) auto;
+  grid-template-columns: auto auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 18px;
-  padding: 14px 18px;
-  border: 1px solid rgba(255, 255, 255, 0.42);
-  border-radius: 24px;
-  background: rgba(255, 252, 246, 0.72);
-  box-shadow: 0 12px 30px rgba(117, 121, 92, 0.1);
+  gap: 12px;
+  width: min(560px, calc(100% - 36px));
+  padding: 10px 14px;
+  border: 1px solid rgba(221, 211, 188, 0.76);
+  border-radius: 999px;
+  background: rgba(255, 252, 246, 0.78);
+  box-shadow: 0 10px 22px rgba(117, 121, 92, 0.08);
+  transform: translateX(-50%);
+}
+
+.focus-hud-leaf {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px 0 999px 999px;
+  background: linear-gradient(135deg, #c9dba5, #8da56e);
+  transform: rotate(-24deg);
 }
 
 .focus-hud-time-block {
@@ -499,25 +484,25 @@ h3 {
 }
 
 .focus-hud-label {
-  margin-bottom: 6px;
+  margin: 2px 0 0;
   color: #6e7a66;
-  font-size: 0.86rem;
+  font-size: 0.74rem;
 }
 
 .focus-hud-time {
   display: block;
-  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-size: clamp(1.35rem, 3vw, 1.85rem);
   line-height: 1;
   letter-spacing: -0.04em;
 }
 
 .focus-hud-center {
   display: grid;
-  gap: 10px;
+  gap: 6px;
 }
 
 .focus-hud-progress {
-  height: 10px;
+  height: 8px;
   border-radius: 999px;
   background: rgba(226, 221, 204, 0.68);
   overflow: hidden;
@@ -533,46 +518,60 @@ h3 {
 .focus-hud-message {
   margin-bottom: 0;
   color: #55635a;
-  font-size: 0.98rem;
+  font-size: 0.84rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .focus-hud-actions {
   display: flex;
-  flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 10px;
+  gap: 8px;
+}
+
+.hud-action-button {
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+}
+
+.hud-action-button-quiet {
+  background: rgba(243, 236, 218, 0.84);
 }
 
 .care-card,
 .pause-card,
 .completion-card {
   position: absolute;
-  right: 26px;
-  left: auto;
-  width: min(420px, calc(100% - 52px));
-  padding: 22px 22px 20px;
-  border: 1px solid rgba(255, 255, 255, 0.42);
-  border-radius: 28px;
-  background: rgba(255, 252, 246, 0.78);
-  box-shadow: 0 16px 34px rgba(117, 121, 92, 0.11);
+  width: min(320px, calc(100% - 36px));
+  padding: 16px 16px 14px;
+  border: 1px solid rgba(221, 211, 188, 0.76);
+  border-radius: 24px;
+  background: rgba(255, 252, 246, 0.74);
+  box-shadow: 0 12px 28px rgba(117, 121, 92, 0.1);
 }
 
 .care-card {
-  top: 108px;
+  left: 22px;
+  bottom: 28px;
 }
 
 .pause-card {
-  top: 206px;
+  right: 22px;
+  top: 82px;
 }
 
 .completion-card {
-  top: 34px;
+  right: 22px;
+  top: 82px;
 }
 
 .care-card h2,
 .pause-card h2,
 .completion-card h2 {
-  margin-bottom: 10px;
+  margin-bottom: 6px;
+  font-size: 1.18rem;
   line-height: 1.15;
 }
 
@@ -593,82 +592,59 @@ h3 {
 
 .completion-card-highlight {
   box-shadow:
-    0 18px 38px rgba(195, 140, 117, 0.18),
-    0 0 0 1px rgba(255, 244, 231, 0.52);
-  animation: completion-glow 0.95s ease-out;
+    0 16px 34px rgba(195, 140, 117, 0.14),
+    0 0 0 1px rgba(255, 244, 231, 0.44);
 }
 
-.completion-badges,
 .completion-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
+  margin-top: 10px;
 }
 
-.completion-badges {
-  margin-bottom: 16px;
-}
-
-.completion-badges span {
-  padding: 8px 14px;
+.completion-inline-button {
+  min-height: 36px;
+  padding: 0 14px;
   border-radius: 999px;
-  background: rgba(246, 237, 213, 0.9);
-  color: #6d6048;
 }
 
-.celebration-strip {
+.care-card-row {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 12px;
-  margin: 18px 0 14px;
-  color: #d08875;
-  font-size: 1.2rem;
 }
 
-.celebration-strip-burst {
-  animation: token-pop 0.95s ease-out;
+.care-card-copy {
+  min-width: 0;
 }
 
-.completion-burst {
-  position: absolute;
-  right: 280px;
-  top: 130px;
-  width: 140px;
-  height: 140px;
-  pointer-events: none;
+.care-option-button {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  min-width: 86px;
+  padding: 8px;
+  border: 0;
+  border-radius: 20px;
+  background: rgba(248, 241, 222, 0.92);
+  color: #5b624f;
+  cursor: pointer;
 }
 
-.burst-dot,
-.burst-ring {
-  position: absolute;
+.care-option-icon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
   border-radius: 999px;
+  background: rgba(255, 252, 246, 0.96);
+  font-size: 0.82rem;
 }
 
-.burst-dot {
-  width: 16px;
-  height: 16px;
-  background: rgba(255, 245, 215, 0.94);
-  box-shadow: 0 0 18px rgba(255, 236, 181, 0.68);
-}
-
-.burst-dot-a {
-  top: 12px;
-  left: 54px;
-}
-
-.burst-dot-b {
-  top: 52px;
-  right: 12px;
-}
-
-.burst-dot-c {
-  bottom: 14px;
-  left: 28px;
-}
-
-.burst-ring {
-  inset: 20px;
-  border: 4px solid rgba(255, 248, 223, 0.9);
-  animation: burst-ring 1.05s ease-out infinite;
+.care-option-text {
+  font-size: 0.85rem;
 }
 
 .setup-modal {
@@ -690,8 +666,8 @@ h3 {
 .setup-panel {
   position: relative;
   z-index: 1;
-  width: min(560px, calc(100% - 28px));
-  padding: 28px 28px 26px;
+  width: min(420px, calc(100% - 28px));
+  padding: 26px 24px 24px;
   border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 32px;
   background: rgba(255, 252, 246, 0.84);
@@ -714,31 +690,13 @@ h3 {
 
 .setup-panel h2 {
   margin-bottom: 10px;
-  font-size: clamp(1.7rem, 2.8vw, 2.2rem);
+  font-size: clamp(1.5rem, 2.8vw, 1.9rem);
   line-height: 1.12;
 }
 
 .setup-description {
-  margin-bottom: 22px;
+  margin-bottom: 20px;
   color: #5e6b61;
-}
-
-.setup-minute-display {
-  padding: 22px;
-  border-radius: 24px;
-  background: linear-gradient(180deg, rgba(242, 246, 224, 0.95), rgba(247, 237, 215, 0.95));
-}
-
-.setup-minute-display strong {
-  display: block;
-  margin-bottom: 6px;
-  font-size: clamp(2.4rem, 6vw, 3.4rem);
-  line-height: 1;
-  letter-spacing: -0.04em;
-}
-
-.setup-minute-display span {
-  color: #6b7665;
 }
 
 .setup-preset-list,
@@ -751,12 +709,53 @@ h3 {
 }
 
 .setup-preset-list {
-  margin-top: 18px;
+  justify-content: center;
+  margin-top: 12px;
 }
 
 .setup-actions {
-  margin-top: 22px;
-  justify-content: space-between;
+  margin-top: 18px;
+  justify-content: center;
+}
+
+.setup-choice-button {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  width: 72px;
+  height: 72px;
+  border: 1px solid rgba(223, 214, 190, 0.78);
+  border-radius: 999px;
+  background: rgba(255, 251, 242, 0.96);
+  color: #67705a;
+  cursor: pointer;
+}
+
+.setup-choice-button span {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.setup-choice-button small {
+  font-size: 0.72rem;
+}
+
+.setup-choice-button-active {
+  background: linear-gradient(180deg, rgba(205, 223, 176, 0.94), rgba(178, 201, 134, 0.96));
+  color: #44553f;
+  box-shadow: 0 10px 18px rgba(132, 152, 96, 0.18);
+}
+
+.setup-selection-note {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  margin-top: 18px;
+  color: #687262;
+}
+
+.setup-selection-note strong {
+  font-size: 1rem;
 }
 
 .card {
@@ -1126,7 +1125,16 @@ h3 {
   }
 
   .focus-hud {
-    grid-template-columns: 1fr;
+    grid-template-columns: auto 1fr;
+    justify-items: start;
+    gap: 10px 12px;
+    padding: 12px 14px;
+  }
+
+  .focus-hud-center,
+  .focus-hud-actions {
+    grid-column: 1 / -1;
+    width: 100%;
   }
 
   .care-card,
@@ -1173,18 +1181,19 @@ h3 {
   }
 
   .speech-bubble,
-  .focus-hud,
   .care-card,
   .pause-card,
-  .completion-card,
-  .idle-invitation {
+  .completion-card {
     left: 18px;
     right: 18px;
     width: auto;
   }
 
-  .idle-invitation {
-    bottom: 18px;
+  .focus-hud {
+    left: 18px;
+    right: 18px;
+    width: auto;
+    transform: none;
   }
 
   .completion-card {

@@ -107,19 +107,6 @@ export default function App() {
           status={status}
         />
 
-        {status === 'idle' ? (
-          <section className="idle-invitation">
-            <p className="eyebrow">Gentle Start</p>
-            <h2>먼저 시간만 정하면, 그다음은 길과 거북이가 대신 흐름을 잡아줘요.</h2>
-            <p>
-              시작하고 나면 메인 화면은 산책길과 거북이 중심으로 바뀌고, 중간에는 짧은 돌봄만 남아요.
-            </p>
-            <button type="button" className="primary-button" onClick={handleOpenSetup}>
-              산책 시간 고르기
-            </button>
-          </section>
-        ) : null}
-
         {isFocusMode ? (
           <FocusHud
             secondsLeft={secondsLeft}
