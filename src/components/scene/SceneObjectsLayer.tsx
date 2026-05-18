@@ -1,3 +1,5 @@
+import { hasApprovedSceneAsset, sceneAssetSlots } from '../../lib/sceneAssetSlots';
+
 type SceneObjectMarker = {
   id: number;
   left: string;
@@ -11,10 +13,23 @@ type SceneObjectsLayerProps = {
 };
 
 export function SceneObjectsLayer({ checkpointMarkers }: SceneObjectsLayerProps) {
+  const hasAnyApprovedObjectAsset = Object.values(sceneAssetSlots.sceneObjects).some((slot) =>
+    hasApprovedSceneAsset(slot.approvedAssetPath),
+  );
+
   return (
     <>
-      <div className="start-sign">출발</div>
-      <div className="finish-sign">도착</div>
+      {hasAnyApprovedObjectAsset ? (
+        <>
+          <div className="start-sign start-sign-asset">출발</div>
+          <div className="finish-sign finish-sign-asset">도착</div>
+        </>
+      ) : (
+        <>
+          <div className="start-sign">출발</div>
+          <div className="finish-sign">도착</div>
+        </>
+      )}
 
       {checkpointMarkers.map((marker) => (
         <div

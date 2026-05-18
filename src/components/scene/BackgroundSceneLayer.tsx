@@ -1,4 +1,14 @@
+import { hasApprovedSceneAsset, sceneAssetSlots } from '../../lib/sceneAssetSlots';
+
 export function BackgroundSceneLayer() {
+  if (hasApprovedSceneAsset(sceneAssetSlots.backgroundScene.approvedAssetPath)) {
+    return (
+      <div className="scene-raster-layer scene-raster-layer-background" aria-hidden="true">
+        <img src={sceneAssetSlots.backgroundScene.approvedAssetPath} alt="" />
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="scene-sky-glow scene-sky-glow-left" />
