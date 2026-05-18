@@ -705,6 +705,7 @@
 - `src/design/tokens.ts`를 추가해 색상, 표면, 모션, 자산 경로 토큰을 코드에서 재사용할 수 있게 정리했다.
 - `public/design-system/background-scene.svg`를 추가해 메인 풍경 장면을 자산 파일로 저장했다.
 - `public/design-system/turtle-walking.svg`, `turtle-resting.svg`, `turtle-cheerful.svg`를 추가해 거북이 상태별 캐릭터 자산을 분리했다.
+- 이후 피드백을 반영해 시간 선택 팝업, 집중 HUD, care moments, 걷기 모션 수치 규칙까지 디자인 시스템 문서에 추가로 고정했다.
 - 이번 단계는 구현 변경보다 디자인 기준점 마련에 집중하기 위해 PR 후 머지 대기 흐름으로 가져가도록 방향을 바꿨다.
 
 ### 설계 상 고민

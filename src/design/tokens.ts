@@ -31,8 +31,18 @@ export const assetTokens = {
 } as const;
 
 export const motionTokens = {
-  walkBobDuration: '1200ms',
-  walkStepDuration: '760ms',
+  walkBobDuration: '900ms',
+  walkStepDuration: '820ms',
   restBreathDuration: '2800ms',
   cheerfulBounceDuration: '900ms',
+  walkBodyOffset: 3,
+  walkHeadOffset: 2,
+  walkHeadRotateDeg: 2,
+} as const;
+
+export const layoutTokens = {
+  setupModalWidth: '420px',
+  focusHudRadius: '999px',
+  focusHudPadding: '12px 18px',
+  carePanelWidth: '280px',
 } as const;
