@@ -321,6 +321,50 @@ h3 {
   right: 44px;
 }
 
+.scene-object-asset {
+  position: absolute;
+  pointer-events: none;
+}
+
+.scene-object-asset img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.scene-object-asset-startSign {
+  left: 28px;
+  bottom: 142px;
+  width: 108px;
+}
+
+.scene-object-asset-waterBowl {
+  left: 42.5%;
+  bottom: 94px;
+  width: 84px;
+  transform: translateX(-50%);
+}
+
+.scene-object-asset-carrot {
+  left: 74%;
+  bottom: 100px;
+  width: 88px;
+  transform: translateX(-50%);
+}
+
+.scene-object-asset-arrowSign {
+  left: 66%;
+  bottom: 148px;
+  width: 86px;
+  transform: translateX(-50%);
+}
+
+.scene-object-asset-finishFlag {
+  right: 22px;
+  bottom: 116px;
+  width: 112px;
+}
+
 .path-marker {
   position: absolute;
   padding: 8px 12px;
@@ -1209,6 +1253,33 @@ h3 {
   .start-sign,
   .finish-sign {
     bottom: 188px;
+  }
+
+  .scene-object-asset-startSign {
+    left: 18px;
+    bottom: 146px;
+    width: 96px;
+  }
+
+  .scene-object-asset-waterBowl {
+    bottom: 102px;
+    width: 76px;
+  }
+
+  .scene-object-asset-carrot {
+    bottom: 108px;
+    width: 80px;
+  }
+
+  .scene-object-asset-arrowSign {
+    bottom: 154px;
+    width: 76px;
+  }
+
+  .scene-object-asset-finishFlag {
+    right: 14px;
+    bottom: 120px;
+    width: 100px;
   }
 
   .speech-bubble,

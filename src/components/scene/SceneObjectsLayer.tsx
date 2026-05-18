@@ -1,4 +1,4 @@
-import { hasApprovedSceneAsset, sceneAssetSlots } from '../../lib/sceneAssetSlots';
+import { hasApprovedSceneAsset, sceneAssetSlots, type SceneObjectAssetKey } from '../../lib/sceneAssetSlots';
 
 type SceneObjectMarker = {
   id: number;
@@ -13,22 +13,28 @@ type SceneObjectsLayerProps = {
 };
 
 export function SceneObjectsLayer({ checkpointMarkers }: SceneObjectsLayerProps) {
-  const hasAnyApprovedObjectAsset = Object.values(sceneAssetSlots.sceneObjects).some((slot) =>
-    hasApprovedSceneAsset(slot.approvedAssetPath),
-  );
+  const startSignPath = sceneAssetSlots.sceneObjects.startSign.approvedAssetPath;
+  const finishFlagPath = sceneAssetSlots.sceneObjects.finishFlag.approvedAssetPath;
+  const arrowSignPath = sceneAssetSlots.sceneObjects.arrowSign.approvedAssetPath;
+  const waterBowlPath = sceneAssetSlots.sceneObjects.waterBowl.approvedAssetPath;
+  const carrotPath = sceneAssetSlots.sceneObjects.carrot.approvedAssetPath;
 
   return (
     <>
-      {hasAnyApprovedObjectAsset ? (
-        <>
-          <div className="start-sign start-sign-asset">출발</div>
-          <div className="finish-sign finish-sign-asset">도착</div>
-        </>
+      {hasApprovedSceneAsset(startSignPath) ? (
+        <SceneObjectAsset assetKey="startSign" assetPath={startSignPath} label="출발" />
       ) : (
-        <>
-          <div className="start-sign">출발</div>
-          <div className="finish-sign">도착</div>
-        </>
+        <div className="start-sign">출발</div>
+      )}
+
+      {hasApprovedSceneAsset(arrowSignPath) ? <SceneObjectAsset assetKey="arrowSign" assetPath={arrowSignPath} label="방향" /> : null}
+      {hasApprovedSceneAsset(waterBowlPath) ? <SceneObjectAsset assetKey="waterBowl" assetPath={waterBowlPath} label="물그릇" /> : null}
+      {hasApprovedSceneAsset(carrotPath) ? <SceneObjectAsset assetKey="carrot" assetPath={carrotPath} label="당근" /> : null}
+
+      {hasApprovedSceneAsset(finishFlagPath) ? (
+        <SceneObjectAsset assetKey="finishFlag" assetPath={finishFlagPath} label="도착" />
+      ) : (
+        <div className="finish-sign">도착</div>
       )}
 
       {checkpointMarkers.map((marker) => (
@@ -41,5 +47,19 @@ export function SceneObjectsLayer({ checkpointMarkers }: SceneObjectsLayerProps)
         </div>
       ))}
     </>
+  );
+}
+
+type SceneObjectAssetProps = {
+  assetKey: SceneObjectAssetKey;
+  assetPath: string;
+  label: string;
+};
+
+function SceneObjectAsset({ assetKey, assetPath, label }: SceneObjectAssetProps) {
+  return (
+    <div className={`scene-object-asset scene-object-asset-${assetKey}`} aria-label={label}>
+      <img src={assetPath} alt="" aria-hidden="true" />
+    </div>
   );
 }
