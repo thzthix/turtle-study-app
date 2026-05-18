@@ -19,24 +19,25 @@ export function FocusHud({
 }: FocusHudProps) {
   return (
     <section className="focus-hud">
+      <span className="focus-hud-leaf" aria-hidden="true" />
       <div className="focus-hud-time-block">
-        <p className="focus-hud-label">남은 시간</p>
         <strong className="focus-hud-time">{formatTime(secondsLeft)}</strong>
+        <p className="focus-hud-label">남은 시간</p>
       </div>
       <div className="focus-hud-center">
+        <p className="focus-hud-message">{encouragementMessage}</p>
         <div className="focus-hud-progress" aria-hidden="true">
           <span style={{ width: `${Math.max(6, progressRatio * 100)}%` }} />
         </div>
-        <p className="focus-hud-message">{encouragementMessage}</p>
       </div>
       <div className="focus-hud-actions">
         {status === 'paused' ? (
-          <button type="button" className="primary-button" onClick={onResumeSession}>
+          <button type="button" className="secondary-button hud-action-button" onClick={onResumeSession}>
             이어가기
           </button>
         ) : null}
-        <button type="button" className="secondary-button" onClick={onResetSession}>
-          그만하기
+        <button type="button" className="secondary-button hud-action-button hud-action-button-quiet" onClick={onResetSession}>
+          종료
         </button>
       </div>
     </section>

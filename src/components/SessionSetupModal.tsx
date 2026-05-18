@@ -5,7 +5,7 @@ type SessionSetupModalProps = {
   onClose: () => void;
 };
 
-const presets = [15, 25, 40, 55];
+const presets = [15, 25, 35, 45, 60];
 
 export function SessionSetupModal({
   selectedMinutes,
@@ -20,36 +20,32 @@ export function SessionSetupModal({
         <button type="button" className="setup-close" aria-label="닫기" onClick={onClose}>
           ×
         </button>
-        <p className="eyebrow">Walk Setup</p>
-        <h2 id="session-setup-title">얼마나 같이 걸을까요?</h2>
-        <p className="setup-description">
-          시간을 정하면 거북이가 길을 따라 천천히 걸어요. 중간에 잠깐 다정함이 필요할 때만 짧게 살펴보면 됩니다.
-        </p>
-
-        <div className="setup-minute-display" aria-live="polite">
-          <strong>{selectedMinutes}분</strong>
-          <span>오늘의 집중 산책 길이</span>
-        </div>
+        <p className="eyebrow">Time Picker</p>
+        <h2 id="session-setup-title">집중할 시간을 선택해요</h2>
+        <p className="setup-description">시간을 정하면 거북이가 조용히 함께 걸어요.</p>
 
         <div className="setup-preset-list" aria-label="집중 시간 선택">
           {presets.map((minutes) => (
             <button
               key={minutes}
               type="button"
-              className={minutes === selectedMinutes ? 'preset-button active' : 'preset-button'}
+              className={minutes === selectedMinutes ? 'setup-choice-button setup-choice-button-active' : 'setup-choice-button'}
               onClick={() => onSelectMinutes(minutes)}
             >
-              {minutes}분
+              <span>{minutes}</span>
+              <small>분</small>
             </button>
           ))}
         </div>
 
+        <div className="setup-selection-note" aria-live="polite">
+          <strong>{selectedMinutes}분</strong>
+          <span>천천히 같이 걷는 오늘의 집중 시간</span>
+        </div>
+
         <div className="setup-actions">
-          <button type="button" className="secondary-button" onClick={onClose}>
-            조금 더 볼래요
-          </button>
           <button type="button" className="primary-button" onClick={onStartSession}>
-            이 시간으로 시작
+            시작하기
           </button>
         </div>
       </section>

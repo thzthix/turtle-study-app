@@ -28,12 +28,12 @@ export function FriendBoard() {
           <p className="eyebrow">Friends</p>
           <h2>다른 거북이들도 오늘을 버티는 중</h2>
         </div>
-        <p className="board-caption">승부보다 응원에 가까운 작은 산책 보드</p>
+        <p className="board-caption">승부보다 응원에 가까운 작은 동행 보드</p>
       </div>
 
       <div className="cheer-summary">
         <strong>{totalCheers}개의 조용한 응원</strong>
-        <span>친구 거북이에게 짧게 응원을 보내도, 다시 바로 내 흐름으로 돌아올 수 있어요.</span>
+        <span>짧게 응원을 보내고도 바로 내 흐름으로 돌아올 수 있어요.</span>
       </div>
 
       <div className="friend-grid">
