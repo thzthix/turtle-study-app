@@ -10,16 +10,16 @@ export function HistoryPanel({ todaySessions, todayMinutes, recentEntries }: His
   return (
     <section className="history-card card">
       <p className="eyebrow">Today Log</p>
-      <h2>오늘의 집중 기록</h2>
+      <h2>오늘의 산책 기록</h2>
 
       <div className="history-metrics">
         <article>
           <strong>{todaySessions}</strong>
-          <span>완료한 산책</span>
+          <span>완료한 세션</span>
         </article>
         <article>
           <strong>{todayMinutes}분</strong>
-          <span>함께 걸은 시간</span>
+          <span>같이 걸은 시간</span>
         </article>
       </div>
 
@@ -27,12 +27,12 @@ export function HistoryPanel({ todaySessions, todayMinutes, recentEntries }: His
         {recentEntries.length > 0 ? (
           recentEntries.map((entry) => (
             <div key={entry.id} className="history-item">
-              <strong>{entry.minutes}분 세션</strong>
-              <span>{formatCompletedTime(entry.completedAt)} 완료</span>
+              <strong>{entry.minutes}분</strong>
+              <span>{formatCompletedTime(entry.completedAt)}</span>
             </div>
           ))
         ) : (
-          <p className="history-empty">아직 오늘의 산책 기록이 없어요. 첫 세션을 시작해볼까요?</p>
+          <p className="history-empty">아직 오늘의 산책 기록이 없어요.</p>
         )}
       </div>
     </section>

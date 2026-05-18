@@ -759,24 +759,24 @@ h3 {
 }
 
 .card {
-  padding: 26px;
-  border: 1px solid rgba(255, 255, 255, 0.42);
+  padding: 22px;
+  border: 1px solid rgba(226, 216, 193, 0.72);
   border-radius: 28px;
-  background: rgba(255, 252, 246, 0.74);
-  box-shadow: 0 16px 34px rgba(117, 121, 92, 0.08);
+  background: rgba(255, 252, 246, 0.68);
+  box-shadow: 0 12px 26px rgba(117, 121, 92, 0.06);
 }
 
 .reflection-layout {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
   align-items: start;
 }
 
 .summary-metrics {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
 }
 
 .summary-metrics article,
@@ -784,29 +784,29 @@ h3 {
 .history-item,
 .cheer-summary,
 .friend-card {
-  padding: 16px;
-  border-radius: 22px;
-  background: rgba(248, 243, 229, 0.84);
+  padding: 14px;
+  border-radius: 20px;
+  background: rgba(248, 243, 229, 0.74);
 }
 
 .summary-metrics strong,
 .history-metrics strong,
 .history-item strong {
   display: block;
-  margin-bottom: 6px;
-  font-size: 1.35rem;
+  margin-bottom: 4px;
+  font-size: 1.2rem;
 }
 
 .history-metrics {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-  margin-bottom: 18px;
+  gap: 12px;
+  margin-bottom: 14px;
 }
 
 .history-list {
   display: grid;
-  gap: 12px;
+  gap: 10px;
 }
 
 .board-header,
@@ -818,32 +818,32 @@ h3 {
 
 .board-header {
   align-items: flex-start;
-  margin-bottom: 18px;
+  margin-bottom: 14px;
 }
 
 .cheer-summary {
   display: grid;
   gap: 6px;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .friend-grid {
   display: grid;
-  gap: 14px;
+  gap: 12px;
 }
 
 .friend-card {
   display: grid;
-  grid-template-columns: 72px minmax(0, 1fr);
-  gap: 14px;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 12px;
 }
 
 .friend-avatar {
   display: grid;
   place-items: center;
-  width: 72px;
-  height: 72px;
-  border-radius: 26px;
+  width: 64px;
+  height: 64px;
+  border-radius: 22px;
 }
 
 .friend-avatar span {
@@ -865,7 +865,7 @@ h3 {
 }
 
 .friend-message {
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 
 .friend-footer {
@@ -874,7 +874,17 @@ h3 {
 
 .friend-supports {
   color: #6d725d;
+  font-size: 0.88rem;
+}
+
+.summary-note,
+.board-caption {
+  color: #7b7563;
   font-size: 0.92rem;
+}
+
+.friend-board {
+  grid-column: 1 / -1;
 }
 
 .preset-button,
