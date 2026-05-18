@@ -26,6 +26,7 @@ export const surfaceTokens = {
 export const assetTokens = {
   backgroundScene: '/design-system/background-scene.svg',
   turtleWalking: '/design-system/turtle-walking.svg',
+  turtleWalkingStep: '/design-system/turtle-walking-step.svg',
   turtleResting: '/design-system/turtle-resting.svg',
   turtleCheerful: '/design-system/turtle-cheerful.svg',
 } as const;
